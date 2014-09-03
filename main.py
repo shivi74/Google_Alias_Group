@@ -14,12 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import logging
 import webapp2
+from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('Hello world!')
 
+class LogSenderHandler(InboundMailHandler):
+    def receive(self, mail_message):
+        logging.info("Received a message from: " + mail_message.sender)
+
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainHandler),
+    ('/logservice',LogSenderHandler)
 ], debug=True)
