@@ -16,19 +16,29 @@
 #
 import logging
 import webapp2
+import database
+import email
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
-
-class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write('Hello world!')
 
 class LogSenderHandler(InboundMailHandler):
     def receive(self, mail_message):
         logging.info("Received a message from: " + mail_message.sender)
-        msg = email.message_from_string(self.request.body)
-        html_bodies = message.bodies('text/html')
+        bodies = message.bodies('text/html')
 
-app = webapp2.WSGIApplication([
-    ('/', MainHandler),
-    (LogSenderHandler.mapping())
-], debug=True)
+        allBodies = u"";
+
+        for body in bodies:
+            try:
+                allBodies = allBodies + unicode(goodDecode(body[1]), errors="ignore")
+            except:
+                pass
+
+        if not allBodies:
+            bodies = message.bodies('text/plain')
+            for body in bodies:
+                try:
+                    allBodies = allBodies + unicode(goodDecode(body[1]), errors="ignore")
+                except:
+                    pass
+
+app = webapp2.WSGIApplication([LogSenderHandler.mapping()], debug=True)
