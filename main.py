@@ -25,8 +25,10 @@ class MainHandler(webapp2.RequestHandler):
 class LogSenderHandler(InboundMailHandler):
     def receive(self, mail_message):
         logging.info("Received a message from: " + mail_message.sender)
+        msg = email.message_from_string(self.request.body)
+        html_bodies = message.bodies('text/html')
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/logservice',LogSenderHandler)
+    (LogSenderHandler.mapping())
 ], debug=True)
