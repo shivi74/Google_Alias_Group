@@ -13,8 +13,7 @@ handlers:
   upload: favicon\.ico
 
 - url: /_ah/mail/.+
-  script: handle_incoming_email.app
-  login: admin
+  script: main.app
 
 - url: .*
   script: main.app
