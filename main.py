@@ -35,6 +35,7 @@ class LogSenderHandler(InboundMailHandler):
             except:
                 pass
 
+
         if not allBodies:
             bodies = message.bodies('text/plain')
             for body in bodies:
