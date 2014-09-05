@@ -18,6 +18,8 @@ import logging
 import webapp2
 import database
 import email
+import string
+from google.appengine.api import mail
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 
 class LogSenderHandler(InboundMailHandler):
@@ -29,7 +31,7 @@ class LogSenderHandler(InboundMailHandler):
 
         for body in bodies:
             try:
-                allBodies = allBodies + unicode(goodDecode(body[1]), errors="ignore")
+                allBodies = allBodies + unicode(errors="ignore")
             except:
                 pass
 
@@ -37,7 +39,7 @@ class LogSenderHandler(InboundMailHandler):
             bodies = message.bodies('text/plain')
             for body in bodies:
                 try:
-                    allBodies = allBodies + unicode(goodDecode(body[1]), errors="ignore")
+                    allBodies = allBodies + unicode(errors="ignore")
                 except:
                     pass
 
