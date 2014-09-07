@@ -23,10 +23,15 @@ from google.appengine.api import mail
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 
 class LogSenderHandler(InboundMailHandler):
-    def receive(self, mail_message):
-        logging.info("Recieved a message from: " + mail_message.sender)
-        bodies = mail_message.bodies('text/plain')
+    def receive(self, message):
+        logging.info("Recieved a message from: " + message.sender)
+        bodies = message.bodies('text/plain')
         logging.info(bodies)
-
+        plaintext = message.bodies(content_type='text/plain')
+        for text in plaintext:
+            txtmsg = ""
+            txtmsg = text[1].decode()
+            logging.info("Body is %s" % txtmsg)
+            self.response.out.write(txtmsg)
 
 app = webapp2.WSGIApplication([LogSenderHandler.mapping()], debug=True)
