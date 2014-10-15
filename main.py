@@ -25,13 +25,17 @@ from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 class LogSenderHandler(InboundMailHandler):
     def receive(self, message):
         logging.info("Recieved a message from: " + message.sender)
-        bodies = message.bodies('text/plain')
-        logging.info(bodies)
-        plaintext = message.bodies(content_type='text/plain')
-        for text in plaintext:
-            txtmsg = ""
-            txtmsg = text[1].decode()
-            logging.info("Body is %s" % txtmsg)
-            self.response.out.write(txtmsg)
+        # Get the body text from the e-mail
+        plaintext_bodies = message.bodies('text/plain')
+        for content_type, body in plaintext_bodies:
+            body_text = body.decode().split('\n')
+            # Loop through each line in the e-mail and discard a line if it is blank
+            for line in body_text:
+                if line != "":
+                    #year = line
+                    logging.info(" ".join(line))
+                    #values = database.Student(database.year = year)
+                    #values.put()
+
 
 app = webapp2.WSGIApplication([LogSenderHandler.mapping()], debug=True)
