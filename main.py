@@ -26,10 +26,10 @@ class LogSenderHandler(InboundMailHandler):
     def receive(self, message):
         logging.info("Recieved a message from: " + message.sender)
         # Get the body text from the e-mail
-        plaintext_bodies = message.bodies('text/plain')
+        bodies = message.bodies('text/plain') #generator
         logging.info("message = %s " % message)
         logging.info("message body = %s " % message.body)
-        for content_type, body in plaintext_bodies:
+        for body in bodies:
             logging.info("Body = %s " % body)
             body_text = body.decode().split('\n')
             # Loop through each line in the e-mail and discard a line if it is blank
