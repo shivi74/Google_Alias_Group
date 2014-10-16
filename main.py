@@ -27,17 +27,22 @@ class LogSenderHandler(InboundMailHandler):
         logging.info("Recieved a message from: " + message.sender)
         # Get the body text from the e-mail
         plaintext_bodies = message.bodies('text/plain')
-        logging.info(" ".join(plaintext_bodies))
         html_bodies = message.bodies('text/html')
-        logging.info(" ".join(html_bodies))
+
         for content_type, body in plaintext_bodies:
+            logging.info("Body = %s " % body)
             body_text = body.decode().split('\n')
+            logging.info("body_text = %s " % body_text)
+            #str1 = body[0][1]
+            #bmsg = email.message_from_string(str1)
+            #logging.info(bmsg)
             # Loop through each line in the e-mail and discard a line if it is blank
-            for line in body_text:
+            #for line in body_text:
                 #logging.info(" ")
-                if line != ',':
-                    #year = line
-                    logging.info(" ".join(body_text))
+                #if line != ',':
+                    #logging.info(" ".join(body_text))
+
+                    #logging.info()
                     #values = database.Student(database.year = year)
                     #values.put()
 
