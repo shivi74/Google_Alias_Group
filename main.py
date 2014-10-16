@@ -26,42 +26,21 @@ class LogSenderHandler(InboundMailHandler):
     def receive(self, message):
         logging.info("Recieved a message from: " + message.sender)
         # Get the body text from the e-mail
-<<<<<<< HEAD
-        plaintext_bodies = message.bodies('text/plain')
-        html_bodies = message.bodies('text/html')
-
-        for content_type, body in plaintext_bodies:
-            logging.info("Body = %s " % body)
-=======
         bodies = message.bodies('text/plain') #generator
         logging.info("message = %s " % message)
         logging.info("message body = %s " % message.body)
         for content_type, body in bodies:
             logging.info(body.decode())
->>>>>>> b5088fb7176358c8e597686ec9635ed6b8d6eae4
             body_text = body.decode().split('\n')
             logging.info("body_text = %s " % body_text)
-            #str1 = body[0][1]
-            #bmsg = email.message_from_string(str1)
-            #logging.info(bmsg)
-            # Loop through each line in the e-mail and discard a line if it is blank
-<<<<<<< HEAD
-            #for line in body_text:
-                #logging.info(" ")
-                #if line != ',':
-                    #logging.info(" ".join(body_text))
 
-                    #logging.info()
-                    #values = database.Student(database.year = year)
-                    #values.put()
-=======
+            # Loop through each line in the e-mail and discard a line if it is blank
             for line in body_text:
                 logging.info("body_text = %s " % body_text)
                 if line != ',':
                     logging.info(line)
                     # Split the current line based on the ": " value and only let it be done once
                     splitline = line.split(': ', 1)
->>>>>>> b5088fb7176358c8e597686ec9635ed6b8d6eae4
 
                     # Check to see which line we now have the details for and place value into the correct variable
                     if splitline[0] == "Year":
