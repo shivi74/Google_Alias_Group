@@ -58,5 +58,6 @@ class LogSenderHandler(InboundMailHandler):
 
         values = database.Student(year, branch, course, lastname, firstname, college, email)
         values.put()
+        logging(values)
 
 app = webapp2.WSGIApplication([LogSenderHandler.mapping()], debug=True)
