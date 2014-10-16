@@ -29,13 +29,14 @@ class LogSenderHandler(InboundMailHandler):
         bodies = message.bodies('text/plain') #generator
         logging.info("message = %s " % message)
         logging.info("message body = %s " % message.body)
-        for body in bodies:
-            logging.info("Body = %s " % body)
+        for content_type, body in bodies:
+            logging.info(body)
             body_text = body.decode().split('\n')
             # Loop through each line in the e-mail and discard a line if it is blank
             for line in body_text:
-                logging.info("body_text = %s " % body_text)
+                #logging.info("body_text = %s " % body_text)
                 if line != ',':
-                    logging.info(" ".join(line))
+                    logging.info(line)
+                    logging.info(line[1])
 
 app = webapp2.WSGIApplication([LogSenderHandler.mapping()], debug=True)
