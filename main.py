@@ -27,39 +27,52 @@ class LogSenderHandler(InboundMailHandler):
         logging.info("Recieved a message from: " + message.sender)
         # Get the body text from the e-mail
         bodies = message.bodies('text/plain') #generator
-        logging.info("message = %s " % message)
-        logging.info("message body = %s " % message.body)
+        #logging.info("message = %s " % message)
+        #logging.info("message body = %s " % message.body)
         for content_type, body in bodies:
             logging.info(body.decode())
             body_text = body.decode().split('\n')
-            logging.info("body_text = %s " % body_text)
+            #logging.info("body_text = %s " % body_text)
 
             # Loop through each line in the e-mail and discard a line if it is blank
             for line in body_text:
                 logging.info("body_text = %s " % body_text)
                 if line != ',':
-                    logging.info(line)
+                    #logging.info(line)
                     # Split the current line based on the ": " value and only let it be done once
                     splitline = line.split(': ', 1)
+                    logging.info("splitline")
+                    logging.info(" ".join(splitline))
+                    logging.info("splitline[0]")
+                    logging.info(splitline[0])
+                    logging.info("splitline[1]")
+                    logging.info(splitline[1])
 
                     # Check to see which line we now have the details for and place value into the correct variable
                     if splitline[0] == "Year":
-                        database.year = splitline[1]
+                        user_year = splitline[1]
                     if splitline[0] == "Branch":
-                        database.branch = splitline[1]
+                        user_branch = splitline[1]
                     if splitline[0] == "Course":
-                        database.course = splitline[1]
+                        user_course = splitline[1]
                     if splitline[0] == "Last Name":
-                        database.lastname = splitline[1]
+                        user_lastname = splitline[1]
                     if splitline[0] == "First Name":
-                        database.firstname = splitline[1]
+                        user_firstname = splitline[1]
                     if splitline[0] == "College":
-                        database.college = splitline[1]
+                        user_college = splitline[1]
                     if splitline[0] == "Gmail Address":
-                        database.email = splitline[1]
+                        user_email = splitline[1]
 
-        values = database.Student(year, branch, course, lastname, firstname, college, email)
+        values = database.Student(year = user_year,
+                                  branch = user_email,
+                                  course = user_course,
+                                  lastname = user_lastname,
+                                  firstname = user_firstname,
+                                  college = user_college,
+                                  email = user_email)
         values.put()
+        logging("values : ")
         logging(values)
 
 app = webapp2.WSGIApplication([LogSenderHandler.mapping()], debug=True)
