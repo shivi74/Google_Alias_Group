@@ -37,7 +37,7 @@ class LogSenderHandler(InboundMailHandler):
             # Loop through each line in the e-mail and discard a line if it is blank
             for line in body_text:
                 logging.info("body_text = %s " % body_text)
-                if line != ',':
+                if line != "":
                     #logging.info(line)
                     # Split the current line based on the ": " value and only let it be done once
                     splitline = line.split(': ', 1)
@@ -50,27 +50,21 @@ class LogSenderHandler(InboundMailHandler):
 
                     # Check to see which line we now have the details for and place value into the correct variable
                     if splitline[0] == "Year":
-                        user_year = splitline[1]
+                        database.year = splitline[1]
                     if splitline[0] == "Branch":
-                        user_branch = splitline[1]
+                        database.branch = splitline[1]
                     if splitline[0] == "Course":
-                        user_course = splitline[1]
+                        database.course = splitline[1]
                     if splitline[0] == "Last Name":
-                        user_lastname = splitline[1]
+                        database.lastname = splitline[1]
                     if splitline[0] == "First Name":
-                        user_firstname = splitline[1]
+                        database.firstname = splitline[1]
                     if splitline[0] == "College":
-                        user_college = splitline[1]
+                        database.college = splitline[1]
                     if splitline[0] == "Gmail Address":
-                        user_email = splitline[1]
+                        database.email = splitline[1]
 
-        values = database.Student(year = user_year,
-                                  branch = user_email,
-                                  course = user_course,
-                                  lastname = user_lastname,
-                                  firstname = user_firstname,
-                                  college = user_college,
-                                  email = user_email)
+        values = database.Student(firstname ,lastname ,branch ,year ,college ,course ,email)
         values.put()
         logging("values : ")
         logging(values)
