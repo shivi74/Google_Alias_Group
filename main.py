@@ -50,21 +50,28 @@ class LogSenderHandler(InboundMailHandler):
 
                     # Check to see which line we now have the details for and place value into the correct variable
                     if splitline[0] == "Year":
-                        database.year = splitline[1]
+                        user_year = splitline[1]
+                        logging.info(user_year)
                     if splitline[0] == "Branch":
-                        database.branch = splitline[1]
+                        user_branch = splitline[1]
                     if splitline[0] == "Course":
-                        database.course = splitline[1]
+                        user_course = splitline[1]
                     if splitline[0] == "Last Name":
-                        database.lastname = splitline[1]
+                        user_lastname = splitline[1]
                     if splitline[0] == "First Name":
-                        database.firstname = splitline[1]
+                        user_firstname = splitline[1]
                     if splitline[0] == "College":
-                        database.college = splitline[1]
+                        user_college = splitline[1]
                     if splitline[0] == "Gmail Address":
-                        database.email = splitline[1]
+                        user_email = splitline[1]
 
-        values = database.Student(firstname ,lastname ,branch ,year ,college ,course ,email)
+        values = database.Student(firstname = 'user_firstname',
+                                  lastname = 'user_lastname',
+                                  branch = 'user_branch',
+                                  year = 'user_year',
+                                  college = 'user_college',
+                                  course = 'user_course',
+                                  email = 'user_email')
         values.put()
         logging("values : ")
         logging(values)
