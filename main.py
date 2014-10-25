@@ -26,54 +26,73 @@ class LogSenderHandler(InboundMailHandler):
     def receive(self, message):
         logging.info("Recieved a message from: " + message.sender)
         # Get the body text from the e-mail
-        bodies = message.bodies('text/plain') #generator
-        #logging.info("message = %s " % message)
-        #logging.info("message body = %s " % message.body)
-        for content_type, body in bodies:
-            logging.info(body.decode())
-            body_text = body.decode().split('\n')
-            #logging.info("body_text = %s " % body_text)
+        bodies = message.bodies('text/plain') # generator
+        body_text = [body for body in bodies]
+        student = database.Student()
+        logging.info(body_text[0][1].decode())
+        for values in body_text[0][1].decode().split('\n'):
+          if not values:
+            break
+          key, value = values.split(':')
+          setattr(student, key, value)
+        student.put()
 
-            # Loop through each line in the e-mail and discard a line if it is blank
-            for line in body_text:
-                logging.info("body_text = %s " % body_text)
-                if line != "":
-                    #logging.info(line)
-                    # Split the current line based on the ": " value and only let it be done once
-                    splitline = line.split(': ', 1)
-                    logging.info("splitline")
-                    logging.info(" ".join(splitline))
-                    logging.info("splitline[0]")
-                    logging.info(splitline[0])
-                    logging.info("splitline[1]")
-                    logging.info(splitline[1])
+#         # Global variables need to be declared
+#         user_year = ""
+#         user_email = ""
+#         user_branch = ""
+#         user_course = ""
+#         user_college = ""
+#         user_lastname = ""
+#         user_firstname = ""
 
-                    # Check to see which line we now have the details for and place value into the correct variable
-                    if splitline[0] == "Year":
-                        user_year = splitline[1]
-                        logging.info(user_year)
-                    if splitline[0] == "Branch":
-                        user_branch = splitline[1]
-                    if splitline[0] == "Course":
-                        user_course = splitline[1]
-                    if splitline[0] == "Last Name":
-                        user_lastname = splitline[1]
-                    if splitline[0] == "First Name":
-                        user_firstname = splitline[1]
-                    if splitline[0] == "College":
-                        user_college = splitline[1]
-                    if splitline[0] == "Gmail Address":
-                        user_email = splitline[1]
+#         for content_type, body in bodies:
+#             logging.info(body.decode())
+#             body_text = body.decode().split('\n')
+#             #logging.info("body_text = %s " % body_text)
 
-        values = database.Student(firstname = 'user_firstname',
-                                  lastname = 'user_lastname',
-                                  branch = 'user_branch',
-                                  year = 'user_year',
-                                  college = 'user_college',
-                                  course = 'user_course',
-                                  email = 'user_email')
-        values.put()
-        logging("values : ")
-        logging(values)
+#             # Loop through each line in the e-mail and discard a line if it is blank
+#             for line in body_text:
+#                 logging.info("body_text = %s " % body_text)
+#                 if line != "":
+#                     #logging.info(line)
+#                     # Split the current line based on the ": " value and only let it be done once
+#                     splitline = line.split(': ', 1)
+#                     logging.info("splitline")
+#                     logging.info(" ".join(splitline))
+#                     logging.info("splitline[0]")
+#                     logging.info(splitline[0])
+#                     logging.info("splitline[1]")
+#                     logging.info(splitline[1])
+
+#                     # Check to see which line we now have the details for and place value into the correct variable
+#                     if splitline[0] == "Year":
+#                         user_year = splitline[1]
+#                     if splitline[0] == "Branch":
+#                         user_branch = splitline[1]
+#                         logging.info("branch: %s" % user_branch)
+#                     if splitline[0] == "Course":
+#                         user_course = splitline[1]
+#                     if splitline[0] == "Last Name":
+#                         user_lastname = splitline[1]
+#                     if splitline[0] == "First Name":
+#                         user_firstname = splitline[1]
+#                     if splitline[0] == "College":
+#                         user_college = splitline[1]
+#                     if splitline[0] == "Gmail Address":
+#                         user_email = splitline[1]
+
+#         # Values variable taken to store values
+#         # Store Data to Datastore in Student database
+#         values = database.Student(firstname = user_firstname,
+#                                   lastname = user_lastname,
+#                                   branch = user_branch,
+#                                   year = user_year,
+#                                   college = user_college,
+#                                   email = user_email)
+#         values.course = user_course
+#         values.put()
+#         logging.info("values : ")
+#         logging.info(values)
 
 app = webapp2.WSGIApplication([LogSenderHandler.mapping()], debug=True)
