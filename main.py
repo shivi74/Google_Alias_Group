@@ -19,8 +19,10 @@ import webapp2
 import database
 import email
 import string
+import gdata.apps.multidomain.client;
 from google.appengine.api import mail
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
+
 
 class LogSenderHandler(InboundMailHandler):
     def receive(self, message):
@@ -40,4 +42,28 @@ class LogSenderHandler(InboundMailHandler):
           setattr(student, key, value)
         student.put()
 
-app = webapp2.WSGIApplication([LogSenderHandler.mapping()], debug=True)
+class MainPageHandler(Handler):
+    def post(self):
+        email=self.request.get("email")
+        branch=self.request.get("branch")
+        year=self.request.get("year")
+
+        a=Student(email=email,branch=branch,year=year)
+
+        p=Student.all()
+
+        logging.info(p)
+
+       # for x in p:
+
+           # multiDomainClient = gdata.apps.multidomain.client.MultiDomainProvisioningClient(domain=domain)
+            #multiDomainClient.ClientLogin(email=email, password=password, source='apps')
+            #multiDomainClient.CreateAlias(email, email_branch_year @gnu.ac.in)
+
+
+
+app = webapp2.WSGIApplication([
+        (LogSenderHandler.mapping()),
+        ('/main',MainPageHandler)
+    ], debug=True)
+
