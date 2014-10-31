@@ -16,12 +16,15 @@
 #
 import logging
 import webapp2
+import os
 import database
 import email
 import string
-import gdata.apps.multidomain.client;
+#import gdata.apps.multidomain.client;
 from google.appengine.api import mail
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
+from google.appengine.api import users
+from google.appengine.ext import db
 
 
 class LogSenderHandler(InboundMailHandler):
@@ -42,28 +45,31 @@ class LogSenderHandler(InboundMailHandler):
           setattr(student, key, value)
         student.put()
 
-class MainPageHandler(Handler):
-    def post(self):
-        email=self.request.get("email")
-        branch=self.request.get("branch")
-        year=self.request.get("year")
+        #check for already existing student
+        #que=db.Query(Student).filter("email=",email)
 
-        a=Student(email=email,branch=branch,year=year)
+class MainPageHandler(webapp2.RequestHandler):
+    def get(self):
 
-        p=Student.all()
+        firstname=self.request.get('firstname')
+        lastname=self.request.get('lastname')
+        branch=self.request.get('branch')
+        year=self.request.get('year')
+        college=self.request.get('college')
+        course=self.request.get('course')
+        email=self.request.get('email')
 
-        logging.info(p)
+        q=GqlQuery("SELECT * FROM Student")
+        for student in q.run():
+            logging.info(student.firstname)
 
-       # for x in p:
-
-           # multiDomainClient = gdata.apps.multidomain.client.MultiDomainProvisioningClient(domain=domain)
-            #multiDomainClient.ClientLogin(email=email, password=password, source='apps')
-            #multiDomainClient.CreateAlias(email, email_branch_year @gnu.ac.in)
 
 
 
 app = webapp2.WSGIApplication([
         (LogSenderHandler.mapping()),
-        ('/main',MainPageHandler)
-    ], debug=True)
+        ('/',MainPageHandler)
+    ],debug=True)
+
+
 
