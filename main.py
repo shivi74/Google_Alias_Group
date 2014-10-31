@@ -54,9 +54,9 @@ class MainPageHandler(Handler):
 
         logging.info(p)
 
-       # for x in p:
+        #for x in p:
 
-           # multiDomainClient = gdata.apps.multidomain.client.MultiDomainProvisioningClient(domain=domain)
+            #multiDomainClient = gdata.apps.multidomain.client.MultiDomainProvisioningClient(domain=domain)
             #multiDomainClient.ClientLogin(email=email, password=password, source='apps')
             #multiDomainClient.CreateAlias(email, email_branch_year @gnu.ac.in)
 
