@@ -63,6 +63,14 @@ class MainPageHandler(webapp2.RequestHandler):
         for student in q.run():
             logging.info(student.firstname)
 
+<<<<<<< HEAD
+=======
+        #for x in p:
+
+            #multiDomainClient = gdata.apps.multidomain.client.MultiDomainProvisioningClient(domain=domain)
+            #multiDomainClient.ClientLogin(email=email, password=password, source='apps')
+            #multiDomainClient.CreateAlias(email, email_branch_year @gnu.ac.in)
+>>>>>>> c63a4823d6fe4377b1dedd9a3886cf116ae09755
 
 
 
