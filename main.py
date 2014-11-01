@@ -44,39 +44,30 @@ class LogSenderHandler(InboundMailHandler):
           logging.info(value)
           setattr(student, key, value)
         student.put()
+        self.redirect('/main')
 
         #check for already existing student
         #que=db.Query(Student).filter("email=",email)
 
 class MainPageHandler(webapp2.RequestHandler):
     def get(self):
+        firstname = self.request.get('firstname')
+        logging.info("firstname = %s" % firstname)
+        lastname = self.request.get('lastname')
+        branch = self.request.get('branch')
+        year = self.request.get('year')
+        college = self.request.get('college')
+        course = self.request.get('course')
+        email = self.request.get('email')
 
-        firstname=self.request.get('firstname')
-        lastname=self.request.get('lastname')
-        branch=self.request.get('branch')
-        year=self.request.get('year')
-        college=self.request.get('college')
-        course=self.request.get('course')
-        email=self.request.get('email')
-
-        q=GqlQuery("SELECT * FROM Student")
+        q = GqlQuery("SELECT * FROM database.Student")
         for student in q.run():
-            logging.info(student.firstname)
-
-<<<<<<< HEAD
-=======
-        #for x in p:
-
-            #multiDomainClient = gdata.apps.multidomain.client.MultiDomainProvisioningClient(domain=domain)
-            #multiDomainClient.ClientLogin(email=email, password=password, source='apps')
-            #multiDomainClient.CreateAlias(email, email_branch_year @gnu.ac.in)
->>>>>>> c63a4823d6fe4377b1dedd9a3886cf116ae09755
-
+            logging.info(student)
 
 
 app = webapp2.WSGIApplication([
         (LogSenderHandler.mapping()),
-        ('/',MainPageHandler)
+        ('/main',MainPageHandler)
     ],debug=True)
 
 
