@@ -20,7 +20,6 @@ import os
 import database
 import email
 import string
-#import gdata.apps.multidomain.client;
 from google.appengine.api import mail
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 from google.appengine.api import users
@@ -45,39 +44,43 @@ class LogSenderHandler(InboundMailHandler):
           setattr(student, key, value)
         student.put()
 
-        #check for already existing student
-        #que=db.Query(Student).filter("email=",email)
+        user_email = ""
+        user_branch = ""
+        user_year = ""
 
-class MainPageHandler(webapp2.RequestHandler):
-    def get(self):
+        if key == 'email':
+            user_email = value
+            logging.info(user_email)
 
-        firstname=self.request.get('firstname')
-        lastname=self.request.get('lastname')
-        branch=self.request.get('branch')
-        year=self.request.get('year')
-        college=self.request.get('college')
-        course=self.request.get('course')
-        email=self.request.get('email')
+        if key == 'branch':
+            user_branch = value
+            logging.info(user_branch)
 
-        q=GqlQuery("SELECT * FROM Student")
-        for student in q.run():
-            logging.info(student.firstname)
+        if key == 'year':
+            user_year = value
+            logging.info(user_year)
 
-<<<<<<< HEAD
-=======
-        #for x in p:
+        alias_list =[]
+        alias_list.append(user_email)
+        alias_list.append(user_branch)
+        alias_list.append(user_year)
+        alias_list.append('@gnu.ac.in')
 
-            #multiDomainClient = gdata.apps.multidomain.client.MultiDomainProvisioningClient(domain=domain)
-            #multiDomainClient.ClientLogin(email=email, password=password, source='apps')
-            #multiDomainClient.CreateAlias(email, email_branch_year @gnu.ac.in)
->>>>>>> c63a4823d6fe4377b1dedd9a3886cf116ae09755
+        logging.info("Users new alias:" + "".join(alias_list))
+
+
+   # q=GqlQuery("SELECT * FROM Student")
+       # for student in q.run():
+          #  logging.info(student.firstname)
+
+
+
 
 
 
 app = webapp2.WSGIApplication([
-        (LogSenderHandler.mapping()),
-        ('/',MainPageHandler)
-    ],debug=True)
-
+       (LogSenderHandler.mapping())
+       #('/main',MainPageHandler)
+   ],debug=True)
 
 
