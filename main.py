@@ -43,11 +43,13 @@ class LogSenderHandler(InboundMailHandler):
           logging.info(value)
           setattr(student, key, value)
         student.put()
+        self.redirect('/main')
 
         user_email = ""
         user_branch = ""
         user_year = ""
 
+<<<<<<< HEAD
         if key == 'email':
             user_email = value
             logging.info(user_email)
@@ -75,6 +77,28 @@ class LogSenderHandler(InboundMailHandler):
 
 
 
+=======
+class MainPageHandler(webapp2.RequestHandler):
+    def get(self):
+        firstname = self.request.get('firstname')
+        logging.info("firstname = %s" % firstname)
+        lastname = self.request.get('lastname')
+        branch = self.request.get('branch')
+        year = self.request.get('year')
+        college = self.request.get('college')
+        course = self.request.get('course')
+        email = self.request.get('email')
+
+        q = GqlQuery("SELECT * FROM database.Student")
+        for student in q.run():
+            logging.info(student)
+
+
+app = webapp2.WSGIApplication([
+        (LogSenderHandler.mapping()),
+        ('/main',MainPageHandler)
+    ],debug=True)
+>>>>>>> cb179c857c35097a2f23990632f7a35431a33257
 
 
 
