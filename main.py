@@ -49,15 +49,12 @@ class LogSenderHandler(InboundMailHandler):
           setattr(student, key, value)
           if key == 'year':
             user_year = value
-            logging.info(user_year)
 
           if key == 'email':
             user_email = value
-            logging.info(user_email)
 
           if key == 'branch':
             user_branch = value
-            logging.info(user_branch)
 
         student.put()
 
@@ -67,7 +64,7 @@ class LogSenderHandler(InboundMailHandler):
         alias_list.append(user_year)
         alias_list.append('@gnu.ac.in')
 
-        logging.info("Users new alias:" + "".join(alias_list))
+        logging.info("Users new alias:"+"_".join(alias_list))
 
 
 app = webapp2.WSGIApplication([
