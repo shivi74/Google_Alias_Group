@@ -30,6 +30,11 @@ class LogSenderHandler(InboundMailHandler):
     def receive(self, message):
         logging.info("Recieved a message from: " + message.sender)
         # Get the body text from the e-mail
+
+        user_email = ""
+        user_branch = ""
+        user_year = ""
+
         bodies = message.bodies('text/plain') # generator
         body_text = [body for body in bodies]
         student = database.Student()
@@ -42,25 +47,19 @@ class LogSenderHandler(InboundMailHandler):
           logging.info(key)
           logging.info(value)
           setattr(student, key, value)
-        student.put()
-        self.redirect('/main')
+          if key == 'year':
+            user_year = value
+            logging.info(user_year)
 
-        user_email = ""
-        user_branch = ""
-        user_year = ""
-
-<<<<<<< HEAD
-        if key == 'email':
+          if key == 'email':
             user_email = value
             logging.info(user_email)
 
-        if key == 'branch':
+          if key == 'branch':
             user_branch = value
             logging.info(user_branch)
 
-        if key == 'year':
-            user_year = value
-            logging.info(user_year)
+        student.put()
 
         alias_list =[]
         alias_list.append(user_email)
@@ -71,40 +70,6 @@ class LogSenderHandler(InboundMailHandler):
         logging.info("Users new alias:" + "".join(alias_list))
 
 
-   # q=GqlQuery("SELECT * FROM Student")
-       # for student in q.run():
-          #  logging.info(student.firstname)
-
-
-
-=======
-class MainPageHandler(webapp2.RequestHandler):
-    def get(self):
-        firstname = self.request.get('firstname')
-        logging.info("firstname = %s" % firstname)
-        lastname = self.request.get('lastname')
-        branch = self.request.get('branch')
-        year = self.request.get('year')
-        college = self.request.get('college')
-        course = self.request.get('course')
-        email = self.request.get('email')
-
-        q = GqlQuery("SELECT * FROM database.Student")
-        for student in q.run():
-            logging.info(student)
-
-
 app = webapp2.WSGIApplication([
-        (LogSenderHandler.mapping()),
-        ('/main',MainPageHandler)
+        (LogSenderHandler.mapping())
     ],debug=True)
->>>>>>> cb179c857c35097a2f23990632f7a35431a33257
-
-
-
-app = webapp2.WSGIApplication([
-       (LogSenderHandler.mapping())
-       #('/main',MainPageHandler)
-   ],debug=True)
-
-
