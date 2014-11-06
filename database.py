@@ -10,7 +10,4 @@ class Student(db.Model):
   college = db.StringProperty()
   course = db.StringProperty()
   email = db.StringProperty()
-  identity=db.StringProperty()
-
-
-
+  identity = db.StringProperty()
