@@ -24,7 +24,19 @@ from google.appengine.api import mail
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 from google.appengine.api import users
 from google.appengine.ext import db
+from oauth2client.appengine import AppAssertionCredentials
+from httplib2 import Http
+from apiclient.discovery import build
 
+credentials = AppAssertionCredentials(
+    'https://www.googleapis.com/auth/admin.directory.group',
+    'https://www.googleapis.com/auth/admin.directory.user')
+
+http_auth = credentials.authorize(Http())
+
+admin = build('admin', 'directory_v1', http=http_auth)
+
+response = admin.execute()
 
 class LogSenderHandler(InboundMailHandler):
     def receive(self, message):
