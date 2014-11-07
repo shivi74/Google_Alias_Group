@@ -30,8 +30,8 @@ from oauth2client import appengine
 from oauth2client import client
 from apiclient import discovery
 
-CLIENT_ID=172132883861-67fq6c7stn1pfm2sqe064s3hrt96c4be.apps.googleusercontent.com
-CLIENT_SECRET=r7SjpDxALT_Jo0qrZfSECfyv
+CLIENT_ID='172132883861-67fq6c7stn1pfm2sqe064s3hrt96c4be.apps.googleusercontent.com'
+CLIENT_SECRET='r7SjpDxALT_Jo0qrZfSECfyv'
 
 class LogSenderHandler(InboundMailHandler):
 
