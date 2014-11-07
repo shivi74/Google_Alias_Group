@@ -22,6 +22,9 @@ import email
 import string
 import pickle
 import httplib2
+import urllib
+import urllib2
+import re
 from google.appengine.api import mail
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 from google.appengine.api import users
@@ -61,6 +64,7 @@ class LogSenderHandler(InboundMailHandler):
           if key == 'email':
             user_email = value
 
+
           if key == 'branch':
             user_branch = value
 
@@ -73,6 +77,16 @@ class LogSenderHandler(InboundMailHandler):
         alias_list.append('@gnu.ac.in')
 
         logging.info("Users new alias:"+"_".join(alias_list))
+
+        #Google Alias Creation
+        url_1 = 'https://www.googleapis.com/admin/directory/v1/users/userKey/aliases'
+        values = dict(userKey=user_email)
+        data = urllib.urlencode(values)
+        request = urllib2.Request(url_1,data)
+        response = urllib2.urlopen(request)
+        content = response.read()
+
+        logging.info(response)
 
 class GoogleAuthHandler(BaseHandler):
 
@@ -97,6 +111,7 @@ class GoogleAuthHandler(BaseHandler):
           logging.info("match not found")
         encode_args = '?' + urllib.urlencode(args)
         self.redirect(auth_url + encode_args)
+
 
 app = webapp2.WSGIApplication([
         (LogSenderHandler.mapping()),
