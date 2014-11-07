@@ -54,6 +54,7 @@ class LogSenderHandler(InboundMailHandler):
         user_email = ""
         user_branch = ""
         user_year = ""
+        user_course = ""
 
         bodies = message.bodies('text/plain') # generator
         body_text = [body for body in bodies]
@@ -77,24 +78,35 @@ class LogSenderHandler(InboundMailHandler):
           if key == 'branch':
             user_branch = value
 
+          if key == 'course':
+            user_course = value
+
         student.put()
 
         alias_list =[]
         alias_list.append(user_email)
         alias_list.append(user_branch)
+        alias_list.append(user_course)
         alias_list.append(user_year)
         alias_list.append('@gnu.ac.in')
 
         logging.info("Users new alias:"+"_".join(alias_list))
 
         url_1 = 'https://www.googleapis.com/admin/directory/v1/users/userKey/aliases'
-        values = dict(userKey=user_email)
+        if key == 'identity'and value == 'Regular':
+          values = dict(userKey=user_email_user_course_user_branch_user_year@gnu.ac.in)
+        if key == 'identity' and value == 'Faculty':
+          values = dict(userKey=user_email_value_user_course_user_branch@gnu.ac.in)
+
         data = urllib.urlencode(values)
         request = urllib2.Request(url_1,data)
         response = urllib2.urlopen(request)
         content = response.read()
 
         logging.info(response)
+
+
+
 
 
 
