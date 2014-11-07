@@ -1,4 +1,5 @@
 from google.appengine.ext import db
+from oauth2client.appengine import CredentialsProperty
 
 Query = db.Query
 
@@ -11,3 +12,6 @@ class Student(db.Model):
   course = db.StringProperty()
   email = db.StringProperty()
   identity = db.StringProperty()
+
+class CredentialsModel(db.Model):
+  credentials = CredentialsProperty()
