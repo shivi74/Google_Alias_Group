@@ -95,22 +95,22 @@ class GoogleAuthHandler(BaseHandler):
     http = credentials.authorize(httplib2.Http(memcache))
     service = build('directory','v1',http=http_auth)
     code = self.request.get("code")
-    auth_url = https://accounts.google.com/o/oauth2/auth
+    auth_url = 'https://accounts.google.com/o/oauth2/auth'
     args = dict(
-          redirect_uri=http://alias-group.appspot.com/oath2callback,
+          redirect_uri='http://alias-group.appspot.com/oath2callback',
           response_type="code",
           access_type=offline,
-          scope=https://www.googleapis.com/auth/admin.directory.user,
+          scope='https://www.googleapis.com/auth/admin.directory.user',
       )
-        if code and state == self.session["token"]:
-          logging.info("match found")
-          output = self.get_tokens()
-          access_token = output["access_token"]
-          loggin.info(access_token)
-        else:
-          logging.info("match not found")
-        encode_args = '?' + urllib.urlencode(args)
-        self.redirect(auth_url + encode_args)
+    if code and state == self.session["token"]:
+        logging.info("match found")
+        output = self.get_tokens()
+        access_token = output["access_token"]
+        loggin.info(access_token)
+    else:
+        logging.info("match not found")
+    encode_args = '?' + urllib.urlencode(args)
+    self.redirect(auth_url + encode_args)
 
 
 app = webapp2.WSGIApplication([
