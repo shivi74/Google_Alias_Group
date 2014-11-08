@@ -15,3 +15,7 @@ class Student(db.Model):
 
 class CredentialsModel(db.Model):
   credentials = CredentialsProperty()
+
+class Information(db.Model):
+  alias_id = db.StringProperty()
+  group_id = db.StringProperty()
