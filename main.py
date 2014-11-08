@@ -24,7 +24,6 @@ import pickle
 import httplib2
 import urllib
 import urllib2
-import re
 from google.appengine.api import mail
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 from google.appengine.api import users
@@ -33,8 +32,18 @@ from oauth2client import appengine
 from oauth2client import client
 from apiclient import discovery
 
-CLIENT_ID='172132883861-67fq6c7stn1pfm2sqe064s3hrt96c4be.apps.googleusercontent.com'
-CLIENT_SECRET='r7SjpDxALT_Jo0qrZfSECfyv'
+auth_url = 'https://accounts.google.com/o/oauth2/auth'
+token_url = 'https://www.googleapis.com/oauth2/v1/tokeninfo'
+
+client_id='172132883861-67fq6c7stn1pfm2sqe064s3hrt96c4be.apps.googleusercontent.com'
+client_secret='r7SjpDxALT_Jo0qrZfSECfyv'
+scope='https://www.googleapis.com/auth/calendar'
+redirect_uri='http://alias-group.appspot.com/oauth2callback'
+response_type="code"
+access_type=offline
+
+service = build('directory','v1',http=http_auth)
+
 
 class LogSenderHandler(InboundMailHandler):
 
@@ -79,41 +88,57 @@ class LogSenderHandler(InboundMailHandler):
         logging.info("Users new alias:"+"_".join(alias_list))
 
         #Google Alias Creation
-        url_1 = 'https://www.googleapis.com/admin/directory/v1/users/userKey/aliases'
-        values = dict(userKey=user_email)
-        data = urllib.urlencode(values)
-        request = urllib2.Request(url_1,data)
-        response = urllib2.urlopen(request)
-        content = response.read()
+        #url_1 = 'https://www.googleapis.com/admin/directory/v1/users/userKey/aliases'
+        #values = dict(userKey=user_email)
+        #data = urllib.urlencode(values)
+        #request = urllib2.Request(url_1,data)
+        #response = urllib2.urlopen(request)
+        #content = response.read()
 
-        logging.info(response)
+        #logging.info(response)
 
 class GoogleAuthHandler(BaseHandler):
 
+  def get_tokens(self):
+        """
+        Return tokens (access_token / refresh_token) and token_type as a dict.
+        """
+        args = dict(
+            client_id=self.client_id,
+            client_secret=self.client_secret,
+            code=self.request.get("code"),
+            redirect_uri=redirect_uri,
+            grant_type="authorization_code"
+        )
+        request = urllib2.Request(
+            self.token_url,
+            urllib.urlencode(args),
+            {'Content-Type': 'application/x-www-form-urlencoded'}
+        )
+        response = urllib2.urlopen(request)
+        output = json.loads(response.read())
+        response.close()
+        return output
+
   def get(self):
-    credentials = AppAssertionCredentials(scope='https://www.googleapis.com/auth/admin.directory.user')
-    http = credentials.authorize(httplib2.Http(memcache))
-    service = build('directory','v1',http=http_auth)
-    code = self.request.get("code")
-    auth_url = 'https://accounts.google.com/o/oauth2/auth'
-    args = dict(
-          redirect_uri='http://alias-group.appspot.com/oath2callback',
-          response_type="code",
-          access_type=offline,
-          scope='https://www.googleapis.com/auth/admin.directory.user',
-      )
-    if code and state == self.session["token"]:
-        logging.info("match found")
-        output = self.get_tokens()
-        access_token = output["access_token"]
-        loggin.info(access_token)
-    else:
-        logging.info("match not found")
-    encode_args = '?' + urllib.urlencode(args)
-    self.redirect(auth_url + encode_args)
+      credentials = AppAssertionCredentials(scope='https://www.googleapis.com/auth/admin.directory.user')
+      http = credentials.authorize(httplib2.Http(memcache))
+      service = build('directory','v1',http=http_auth)
+      code = self.request.get("code")
+      state = self.request.get("state")
+      if code and state == self.session["token"]:
+          logging.info("match found")
+          output = self.get_tokens()
+          access_token = output["access_token"]
+          loggin.info(access_token)
+      else:
+          logging.info("match not found")
+      encode_args = '?' + urllib.urlencode(decorator)
+      self.redirect(auth_url + encode_args)
 
 
 app = webapp2.WSGIApplication([
         (LogSenderHandler.mapping()),
-        ('/oauth2callback',GoogleAuthHandler, name='google')
+        ('/google',GoogleAuthHandler),
+        (decorator.callback_path, decorator.callback_handler()),
     ],debug=True)
