@@ -1,17 +1,19 @@
-from google.appengine.ext import db
-from oauth2client.appengine import CredentialsProperty
+from google.appengine.ext import ndb
 
-Query = db.Query
 
-class Student(db.Model):
-  firstname = db.StringProperty()
-  lastname = db.StringProperty()
-  branch = db.StringProperty()
-  year = db.StringProperty()
-  college = db.StringProperty()
-  course = db.StringProperty()
-  email = db.StringProperty()
-  identity = db.StringProperty()
+class Student(ndb.Model):
+    firstname = ndb.StringProperty()
+    lastname = ndb.StringProperty()
+    branch = ndb.StringProperty()
+    year = ndb.StringProperty()
+    college = ndb.StringProperty()
+    course = ndb.StringProperty()
+    email = ndb.StringProperty()
+    identity = ndb.StringProperty()
 
-class CredentialsModel(db.Model):
-  credentials = CredentialsProperty()
+
+class Tokens(ndb.Model):
+
+    """Stores token information."""
+    access_token = ndb.StringProperty(required=True)
+    refresh_token = ndb.StringProperty(required=True)
