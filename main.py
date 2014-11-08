@@ -71,12 +71,14 @@ class AliasHandler(webapp2.RequestHandler):
 
     def get(self):
         access_token = GoogleAuthHandler.get_access_token()
-        args = urllib.urlencode(
-            dict(access_token=access_token, alias="love@gnu.ac.in")
-        )
+        args = dict(access_token=access_token, alias="love@gnu.ac.in")
         logging.info(args)
-        response = urllib2.urlopen(
-            ALIAS_URL + 'love.sharma.87@gmail.com/aliases' + '?' + args)
+        request = urllib2.Request(
+            ALIAS_URL + 'shivani.9487@gmail.com/aliases',
+            urllib.urlencode(args),
+            {'Content-Type': 'application/x-www-form-urlencoded'}
+        )
+        response = urllib2.urlopen(request)
         aliase_info = json.loads(response.read())
         response.close()
         self.response.out.write(aliase_info)
