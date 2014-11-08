@@ -4,6 +4,7 @@ import logging
 import urllib
 import urllib2
 import webapp2
+from google.appengine.api import urlfetch
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 
 AUTH_URL = 'https://accounts.google.com/o/oauth2/auth'
@@ -71,17 +72,25 @@ class AliasHandler(webapp2.RequestHandler):
 
     def get(self):
         access_token = GoogleAuthHandler.get_access_token()
-        args = dict(access_token=access_token, alias="love@gnu.ac.in")
+        args = urllib.urlencode(dict(alias="jay3@gnu.ac.in"))
         logging.info(args)
-        request = urllib2.Request(
-            ALIAS_URL + 'shivani.9487@gmail.com/aliases',
-            urllib.urlencode(args),
-            {'Content-Type': 'application/x-www-form-urlencoded'}
-        )
-        response = urllib2.urlopen(request)
-        aliase_info = json.loads(response.read())
-        response.close()
-        self.response.out.write(aliase_info)
+        # request = urllib2.Request(
+        #     ALIAS_URL + 'jay@gnu.ac.in/aliases',
+        #     urllib.urlencode(args),
+        #     {'Content-Type': 'application/x-www-form-urlencoded',
+        #      'Authorization': 'Bearer %s' % access_token}
+        # )
+        # response = urllib2.urlopen(request)
+        alias_info = urlfetch.fetch(
+            url=ALIAS_URL + 'jay@gnu.ac.in/aliases',
+            payload=dict(alias="jay3@gnu.ac.in"),
+            method=urlfetch.POST,
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer %s' % access_token}
+        ).content
+        # aliase_info = json.loads(response.read())
+        # response.close()
+        self.response.out.write(alias_info)
 
 
 class GoogleAuthHandler(webapp2.RequestHandler):
