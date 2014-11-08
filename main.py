@@ -20,33 +20,24 @@ import os
 import database
 import email
 import string
+import pickle
+import httplib2
+import urllib
+import urllib2
+import re
 from google.appengine.api import mail
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 from google.appengine.api import users
 from google.appengine.ext import db
-<<<<<<< HEAD
-import urllib
-import urllib2
-import cookielib
-import httplib
-import re
-=======
-from oauth2client.appengine import AppAssertionCredentials
-from httplib2 import Http
-from apiclient.discovery import build
->>>>>>> 21c0ebcbe1e7cadc20bf7db0d24486b2908a6e44
+from oauth2client import appengine
+from oauth2client import client
+from apiclient import discovery
 
-credentials = AppAssertionCredentials(
-    'https://www.googleapis.com/auth/admin.directory.group',
-    'https://www.googleapis.com/auth/admin.directory.user')
-
-http_auth = credentials.authorize(Http())
-
-admin = build('admin', 'directory_v1', http=http_auth)
-
-response = admin.execute()
+CLIENT_ID='172132883861-67fq6c7stn1pfm2sqe064s3hrt96c4be.apps.googleusercontent.com'
+CLIENT_SECRET='r7SjpDxALT_Jo0qrZfSECfyv'
 
 class LogSenderHandler(InboundMailHandler):
+
     def receive(self, message):
         logging.info("Recieved a message from: " + message.sender)
         # Get the body text from the e-mail
@@ -92,6 +83,7 @@ class LogSenderHandler(InboundMailHandler):
 
         logging.info("Users new alias:"+"_".join(alias_list))
 
+        #Google Alias Creation
         url_1 = 'https://www.googleapis.com/admin/directory/v1/users/userKey/aliases'
         if key == 'identity'and value == 'Regular':
           values = dict(userKey=user_email_user_course_user_branch_user_year@gnu.ac.in)
@@ -105,13 +97,35 @@ class LogSenderHandler(InboundMailHandler):
 
         logging.info(response)
 
+class GoogleAuthHandler(BaseHandler):
 
-
+  def get(self):
+    credentials = AppAssertionCredentials(scope='https://www.googleapis.com/auth/admin.directory.user')
+    http = credentials.authorize(httplib2.Http(memcache))
+    service = build('directory','v1',http=http_auth)
+    code = self.request.get("code")
+    auth_url = 'https://accounts.google.com/o/oauth2/auth'
+    args = dict(
+          redirect_uri='http://alias-group.appspot.com/oath2callback',
+          response_type="code",
+          access_type=offline,
+          scope='https://www.googleapis.com/auth/admin.directory.user',
+      )
+    if code and state == self.session["token"]:
+        logging.info("match found")
+        output = self.get_tokens()
+        access_token = output["access_token"]
+        loggin.info(access_token)
+    else:
+        logging.info("match not found")
+    encode_args = '?' + urllib.urlencode(args)
+    self.redirect(auth_url + encode_args)
 
 
 
 
 
 app = webapp2.WSGIApplication([
-        (LogSenderHandler.mapping())
+        (LogSenderHandler.mapping()),
+        ('/oauth2callback',GoogleAuthHandler, name='google')
     ],debug=True)
