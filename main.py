@@ -167,8 +167,4 @@ app = webapp2.WSGIApplication([
     (LogSenderHandler.mapping()),
     ('/oauth2callback', GoogleAuthHandler),
     ('/aliase', AliasHandler),
-<<<<<<< HEAD
 ], debug=True)
-=======
-], debug=True)
->>>>>>> d30db9fb21220ef0fbfd946b8b5513be9060e195
