@@ -1,4 +1,4 @@
-indexes:
+acha hindexes:
 
 - kind: Student
   ancestor: no
@@ -8,6 +8,9 @@ indexes:
   - name: email
   - name: branch
   - name: college
+  - name: identity
+  - name: course
+
 
 
 
